@@ -9,24 +9,26 @@ jobs:
     steps:
 
       - uses: actions/checkout@v2
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: us-east-1
 
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
 
-      - name: Install AWS CDK
-        run: npm install aws-cdk
-
-      - name: Set up application
+      - name: Set up application dependencies
         run: pip install -r requirements.txt
+        
+      - name: Install AWS CDK
+        run: npm install -g aws-cdk
 
       - name: Application bootstrap
-        run: npx cdk bootstrap
-        
+        run:  cdk bootstrap
+
       - name: Deploy
-        run: npx cdk deploy --require-approval=never
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: us-east-2
+        run:  cdk deploy --require-approval never
