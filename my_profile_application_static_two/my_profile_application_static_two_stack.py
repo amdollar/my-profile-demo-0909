@@ -22,6 +22,6 @@ class MyProfileApplicationStaticTwoStack(cdk.Stack):
             public_read_access= True
         )
 
-        deployment.BucketDeployment(self, 'my-profile-bucket-deployment-py03', sources= [deployment.Source.asset("../website")],
+        deployment.BucketDeployment(self, 'my-profile-bucket-deployment-py03', sources= [deployment.Source.asset("website")],
         destination_bucket= bucket)
 
