@@ -21,6 +21,9 @@ jobs:
       - name: Set up application
         run: pip install -r requirements.txt
 
+      - name: Application bootstrap
+        run: npx cdk bootstrap
+        
       - name: Deploy
         run: npx cdk deploy --require-approval=never
         env:
