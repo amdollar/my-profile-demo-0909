@@ -14,6 +14,8 @@ from my_profile_application_static_two.my_profile_application_static_two_stack i
 
 app = core.App()
 MyProfileApplicationStaticTwoStack(app, "MyProfileApplicationStaticTwoStack",
+
+    env=core.Environment(account='417907809917', region='us-east-1')
     # If you don't specify 'env', this stack will be environment-agnostic.
     # Account/Region-dependent features and context lookups will not work,
     # but a single synthesized template can be deployed anywhere.
