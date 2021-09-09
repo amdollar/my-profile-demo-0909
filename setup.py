@@ -19,9 +19,9 @@ setuptools.setup(
     packages=setuptools.find_packages(where="my_profile_application_static_two"),
 
     install_requires=[
-        "aws-cdk.core==1.121.0",
-        "aws-cdk.s3==1.121.0",
-        "aws-cdk-s3-deployment==1.121.0"
+        "aws-cdk.core",
+        "aws-cdk.s3",
+        "aws-cdk-s3-deployment"
     ],
 
     python_requires=">=3.6",
