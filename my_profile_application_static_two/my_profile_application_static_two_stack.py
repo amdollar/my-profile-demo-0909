@@ -26,7 +26,7 @@ class MyProfileApplicationStaticTwoStack(cdk.Stack):
          #code for s3 bucket.
         bucket= s3.Bucket(self, id='s3bucket03', bucket_name= 'my-profile.com',
             website_index_document= "index.html",
-            public_read_access= True,
+            #public_read_access= True,
             removal_policy= cdk.RemovalPolicy.DESTROY
         )
 
