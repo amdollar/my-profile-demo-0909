@@ -4,7 +4,8 @@ from aws_cdk import (
     aws_s3_deployment as deployment,
     aws_route53 as route53,
     aws_cloudfront_origins as origins,
-    aws_cloudfront as cloudfront
+    aws_cloudfront as cloudfront,
+    aws_iam as iam
 )
 from types import CodeType
 
@@ -13,7 +14,6 @@ from types import CodeType
 # the CDK's core module.  The following line also imports it as `core` for use
 # with examples from the CDK Developer's Guide, which are in the process of
 # being updated to use `cdk`.  You may delete this import if you don't need it.
-from aws_cdk import core
 
 
 [recordName, domainName] = ['www', 'my-profile.com']
@@ -30,15 +30,38 @@ class MyProfileApplicationStaticTwoStack(cdk.Stack):
             removal_policy= cdk.RemovalPolicy.DESTROY
         )
 
+        originAccessIdentity = cloudfront.OriginAccessIdentity(self, 'OAI')
+        #bucket.grant_read(originAccessIdentity)
+
+        bucket.add_to_resource_policy(iam.PolicyStatement(
+            actions=['s3:GetObject'],
+            resources=[bucket.arn_for_objects('*')],
+            principals= [iam.CanonicalUserPrincipal(originAccessIdentity.cloud_front_origin_access_identity_s3_canonical_user_id)]
+        ))
+
+        distribution = cloudfront.CloudFrontWebDistribution(self, 'cloud-front-web-dist',
+            origin_configs=[cloudfront.SourceConfiguration(
+                s3_origin_source=cloudfront.S3OriginConfig(
+                    s3_bucket_source= bucket,
+                    origin_access_identity=originAccessIdentity
+                ),
+                behaviors=[cloudfront.Behavior(is_default_behavior=True)]
+            )
+            ])
+
         # s3 bucket deployment Code
         deployment.BucketDeployment(self, 'my-profile-bucket-deployment-py03', sources= [deployment.Source.asset("website")],
         destination_bucket= bucket)
 
+        #OAI
         
+
+
         #Code for adding Cloud front on s3 bucket. 
 
-        cloudfront.Distribution(self, 'my-profile-application-distribution', default_behavior= cloudfront.BehaviorOptions(
-            origin=origins.S3Origin(bucket)))
+#        cloudfront.Distribution(self, 'my-profile-application-distribution', default_behavior= cloudfront.BehaviorOptions(
+ #           origin=origins.S3Origin(bucket, origin_access_identity: )))
+
 
     
         
